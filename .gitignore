@@ -1,0 +1,22 @@
+# created by virtualenv automatically
+# Virtual environment
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# IDE files
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Data files / indexes
+*.npy
+*.index
+metadata.npy
+vector.index
+repo/
