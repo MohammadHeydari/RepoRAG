@@ -138,118 +138,97 @@ Here's a list of the services defined in the `docker-compose.yml` files:
 
 #### Query: How does Spark streaming work?
 
---- ANSWER ---
 
-```
+`
 Spark Streaming reads from Kafka topic `telecom_events`, parses JSON, performs window aggregation (1 minute) by operator, and calculates metrics like `total_data_mb` and `total_call_duration`.
-```
+`
 
 #### Query: what is kafka ip?
 
---- ANSWER ---
-```
+`
 192.168.224.128
-```
+`
 
 #### Query: How many files are in the repo?
 
---- ANSWER ---
-
-```
+`
 There are 5 files in the repo.
-```
-
-
+`
 #### Query: do we have any images in the repo
 
---- ANSWER ---
-
-```
+`
 Yes, the repository contains the following images: minio, nginx, clickhouse, bitnami/zookeeper, bitnami/kafka, and bitnami/spark.
-```
+`
 
 #### Query: compose file version?
 
---- ANSWER ---
-```
+`
 "3.9"
-```
+`
 
 #### Query: encoding in kafka producer?
 
---- ANSWER ---
-```
+`
 The Kafka producer uses `value_serializer=lambda v: json.dumps(v).encode("utf-8")` to encode the event data as UTF-8 bytes before sending it to Kafka.
-```
+`
 #### Query: what are the kafka events fields?
 
---- ANSWER ---
-```
+`
 The event contains: user_id, timestamp, data_mb, call_duration, and operator.
-```
+`
 
 #### Query: what is the name of network of compose file
 
---- ANSWER ---
-```
+`
 telecom-net
-```
+`
 
 #### Query: How does Spark streaming work?
 
---- ANSWER ---
 
-```
+`
 Spark Streaming reads from the Kafka topic `telecom_events`, parses the JSON stream, performs a 1-minute window aggregation by operator, and calculates total data MB and total call duration.
-```
+`
 
 #### what is sleep time of kafka in generate events?
 
---- ANSWER ---
 
-```
+`
 0.5
-```
+`
 
 #### Query: do we have me readme file?
 
---- ANSWER ---
-```
+`
 Yes, there is a README file.
-```
+`
 
 #### Query: any volumes in compose file?
 
---- ANSWER ---
-```
+`
 clickhouse_data:/var/lib/clickhouse
-```
+`
 
 #### Query: what is this function KafkaProducer does?
 
---- ANSWER ---
-```
+`
 The `KafkaProducer` creates a Kafka producer that sends JSON-encoded events to the `telecom_events` Kafka topic on the server `192.168.224.128:9092`. It uses ZooKeeper for coordination.
-```
+`
 
 #### Query: what is the role of generate_event function?
 
---- ANSWER ---
-```
+`
 The `generate_event()` function creates a JSON-like dictionary containing simulated telecom event data, including user ID, timestamp, data usage, call duration, and operator.
-```
+`
 
 #### Query: what is StructType in spark?
 
---- ANSWER ---
 
-```
+`
 StructType is a Spark SQL data type that defines the schema of a table or DataFrame. It specifies the names and data types of the columns in the data.
-```
+`
 
 #### Query: bootstrap_servers?
-
---- ANSWER ---
 
 `192.168.224.128:9092`
 
