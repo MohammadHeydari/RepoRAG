@@ -1,0 +1,247 @@
+# GitHub Repository RAG Assistant
+
+A Retrieval-Augmented Generation (RAG) system that allows you to **chat with your own GitHub repository** using semantic search and a local LLM (Ollama).
+
+This project indexes a codebase, builds vector embeddings, and enables natural language questions about the repository.
+
+---
+
+## Features
+
+- Automatic GitHub repository loader
+- File filtering by extension (`.py`, `.md`, `.yml`, etc.)
+- Intelligent code chunking with overlap
+- Vector embeddings using SentenceTransformers
+- FAISS-based similarity search (cosine similarity)
+- Metadata tagging (file path + extension)
+- LLM-powered Q&A using Ollama (local models)
+- Interactive CLI chat interface
+
+---
+
+## Architecture
+
+```text
+GitHub Repo - > load.py - > chunker.py > vectorstore.py > search.py - > chat.py
+```
+## Project Structure
+```
+.
+├── repo/                 # Cloned GitHub repository
+├── load.py              # File loader with metadata extraction
+├── chunker.py           # Text chunking logic
+├── vectorstore.py       # Embedding + FAISS index builder
+├── search.py            # Semantic search engine
+├── chat_ollama.py       # RAG chat with Ollama LLM
+├── ingest.py            # Debug & ingestion pipeline
+├── vector.index         # FAISS index (generated)
+└── metadata.npy         # Stored chunks (generated)
+```
+
+## Installation
+
+1. Clone this repo
+
+```
+git clone https://github.com/MohammadHeydari/RepoRAG.git
+cd reporag
+```
+
+2. Install dependencies
+
+```
+pip install gitpython faiss-cpu numpy sentence-transformers langchain
+```
+3. Install and run Ollama
+
+Install from: https://ollama.com
+
+Then pull a model:
+```
+ollama run gemma3:4b
+```
+
+## Usage
+
+### Replace this with your own repository URL
+
+Go to ```clone.py``` 
+
+then,
+
+look for this line 
+
+```
+REPO_URL = "https://github.com/your-username/your-repo.git"
+```
+and replace this with your own repository URL. 
+
+#### Step 1: Clone target repository
+```
+python clone.py
+```
+
+#### Step 2: Ingesting
+
+```
+python ingest.py
+```
+
+#### Step 3: Build vector database
+```
+python vectorstore.py
+```
+#### Step 4: Test retrieval (optional)
+```
+python search.py
+```
+#### Step 4: Start RAG chat
+```
+python chat.py
+```
+
+## sample ```Q``` and ```R``` of example Queries and corresponding Responses on the current repo:
+
+```
+python .\chat.py
+```
+ignore it: 
+```
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.  
+Loading weights: 100%|████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 5864.33it/s] 
+```
+
+#### Query: What does this repository do?
+
+--- ANSWER ---
+
+```
+This repository implements a real-time telecom streaming pipeline using Kafka, Spark Streaming, and Python, currently in development (PoC / experimental). It includes a Kafka producer, a Kafka cluster, a Spark cluster, and a simple dashboard. Future work is planned to include PostgreSQL storage and Grafana dashboards.
+```
+
+#### Query: Which services are defined in docker-compose?
+
+--- ANSWER ---
+
+```
+Here's a list of the services defined in the `docker-compose.yml` files:
+
+*   minio
+*   fastapi
+*   clickhouse
+*   zookeeper
+*   kafka
+*   spark
+*   spark-worker
+
+```
+
+#### Query: How does Spark streaming work?
+
+--- ANSWER ---
+
+```
+Spark Streaming reads from Kafka topic `telecom_events`, parses JSON, performs window aggregation (1 minute) by operator, and calculates metrics like `total_data_mb` and `total_call_duration`.
+```
+
+#### Query: what is kafka ip?
+
+--- ANSWER ---
+```
+192.168.224.128
+```
+
+#### Query: How many files are in the repo?
+
+--- ANSWER ---
+
+```
+There are 5 files in the repo.
+```
+
+
+#### Query: do we have any images in the repo
+
+--- ANSWER ---
+
+```
+Yes, the repository contains the following images: minio, nginx, clickhouse, bitnami/zookeeper, bitnami/kafka, and bitnami/spark.
+```
+
+#### Query: compose file version?
+
+--- ANSWER ---
+```
+"3.9"
+```
+
+#### Query: encoding in kafka producer?
+
+--- ANSWER ---
+```
+The Kafka producer uses `value_serializer=lambda v: json.dumps(v).encode("utf-8")` to encode the event data as UTF-8 bytes before sending it to Kafka.
+```
+#### Query: what are the kafka events fields?
+
+--- ANSWER ---
+```
+The event contains: user_id, timestamp, data_mb, call_duration, and operator.
+```
+
+#### Query: what is the name of network of compose file
+
+--- ANSWER ---
+```
+telecom-net
+```
+
+#### Query: How does Spark streaming work?
+
+--- ANSWER ---
+
+```
+Spark Streaming reads from the Kafka topic `telecom_events`, parses the JSON stream, performs a 1-minute window aggregation by operator, and calculates total data MB and total call duration.
+```
+
+#### what is sleep time of kafka in generate events?
+
+--- ANSWER ---
+
+```
+0.5
+```
+
+#### Query: do we have me readme file?
+
+--- ANSWER ---
+```
+Yes, there is a README file.
+```
+
+#### Query: any volumes in compose file?
+
+--- ANSWER ---
+```
+clickhouse_data:/var/lib/clickhouse
+```
+
+## How It Works
+- Repository files are loaded and filtered
+- Code is split into overlapping chunks
+- Each chunk is embedded into vector space
+- FAISS indexes embeddings for fast retrieval
+- User query is embedded and matched
+- Top-k relevant chunks are sent to LLM
+- Ollama generates final answer
+
+## Future Improvements
+- Reranking model for better retrieval quality
+- Hybrid search (BM25 + vector search)
+- Streaming responses (ChatGPT-style)
+- AST-based code chunking
+- Multi-repo support
+- Web UI (FastAPI / React)
+
+## Contribution
+
+Pull requests are welcome. For major changes, please open an issue first.
