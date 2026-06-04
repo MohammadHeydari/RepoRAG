@@ -247,6 +247,13 @@ The `generate_event()` function creates a JSON-like dictionary containing simula
 StructType is a Spark SQL data type that defines the schema of a table or DataFrame. It specifies the names and data types of the columns in the data.
 ```
 
+#### Query: bootstrap_servers?
+
+--- ANSWER ---
+
+`192.168.224.128:9092`
+
+
 ## How It Works
 - Repository files are loaded and filtered
 - Code is split into overlapping chunks
