@@ -225,6 +225,20 @@ Yes, there is a README file.
 clickhouse_data:/var/lib/clickhouse
 ```
 
+#### Query: what is this function KafkaProducer does?
+
+--- ANSWER ---
+```
+The `KafkaProducer` creates a Kafka producer that sends JSON-encoded events to the `telecom_events` Kafka topic on the server `192.168.224.128:9092`. It uses ZooKeeper for coordination.
+```
+
+#### Query: what is the role of generate_event function?
+
+--- ANSWER ---
+```
+The `generate_event()` function creates a JSON-like dictionary containing simulated telecom event data, including user ID, timestamp, data usage, call duration, and operator.
+```
+
 ## How It Works
 - Repository files are loaded and filtered
 - Code is split into overlapping chunks
