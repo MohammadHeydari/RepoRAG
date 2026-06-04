@@ -239,6 +239,14 @@ The `KafkaProducer` creates a Kafka producer that sends JSON-encoded events to t
 The `generate_event()` function creates a JSON-like dictionary containing simulated telecom event data, including user ID, timestamp, data usage, call duration, and operator.
 ```
 
+#### Query: what is StructType in spark?
+
+--- ANSWER ---
+
+```
+StructType is a Spark SQL data type that defines the schema of a table or DataFrame. It specifies the names and data types of the columns in the data.
+```
+
 ## How It Works
 - Repository files are loaded and filtered
 - Code is split into overlapping chunks
