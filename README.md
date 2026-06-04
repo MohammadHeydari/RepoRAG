@@ -232,7 +232,6 @@ StructType is a Spark SQL data type that defines the schema of a table or DataFr
 
 `192.168.224.128:9092`
 
-
 ## How It Works
 - Repository files are loaded and filtered
 - Code is split into overlapping chunks
@@ -242,13 +241,87 @@ StructType is a Spark SQL data type that defines the schema of a table or DataFr
 - Top-k relevant chunks are sent to LLM
 - Ollama generates final answer
 
-## Future Improvements
-- Reranking model for better retrieval quality
-- Hybrid search (BM25 + vector search)
-- Streaming responses (ChatGPT-style)
-- AST-based code chunking
-- Multi-repo support
-- Web UI (FastAPI / React)
+---
+
+
+## GrapRAG Layer (Experimental Extension)
+
+In addition to standard Retrieval-Augmented Generation (RAG), this project includes an experimental **Graph-based RAG layer** to improve contextual understanding of the codebase.
+
+### Overview
+
+Traditional vector search retrieves isolated chunks based on semantic similarity.  
+This project extends that with a **Graph RAG approach**, where:
+
+- Each code chunk is represented as a **graph node**
+- Nodes are connected based on **entity overlap (e.g., Kafka, Spark, functions, imports)**
+- Queries trigger both:
+  - Semantic retrieval (via Sentence Transformers)
+  - Graph traversal (multi-hop context expansion)
+
+---
+
+### How It Works
+
+The Graph RAG pipeline consists of the following steps:
+
+1. **Repository Parsing**
+   - Load source files from the repository
+   - Filter supported file types (e.g., `.py`, `.md`, `.yml`)
+
+2. **Chunking**
+   - Split files into manageable code/text chunks
+   - Attach metadata (file source, extension)
+
+3. **Entity Extraction**
+   - Extract named entities from each chunk using NLP (spaCy)
+   - Entities include tools, frameworks, functions, and keywords
+
+4. **Graph Construction**
+   - Each chunk becomes a node
+   - Edges are created when nodes share common entities
+
+5. **Graph-based Retrieval**
+   - Query is matched to seed nodes using semantic similarity
+   - Graph is expanded using multi-hop traversal
+   - Nodes are ranked using:
+     - Entity overlap
+     - Node connectivity (degree)
+
+---
+
+### Query Flow
+
+`
+User Query - > Semantic Search (Sentence Transformers) - > Seed Nodes Selection - >
+Graph Expansion (Multi-hop neighbors) - > Scoring & Ranking - > 
+Top-K Context Chunks - > LLM (Ollama / Gemma) Answer Generation
+`
+### Key Benefits
+
+- Captures **relationships between files**, not just similarity
+- Improves reasoning over **multi-file dependencies**
+- Better answers for architecture-level questions
+- Works well for:
+  - System design questions
+  - Code navigation
+  - Dependency tracing
+
+### Status
+
+This Graph RAG layer is currently **experimental** and may evolve into:
+
+- Hybrid Graph + Vector Retrieval system
+- PageRank-based node scoring
+- Cross-encoder reranking layer
+- Code-aware AST-based graph construction
+
+### Future Improvements
+
+- Add PageRank scoring for nodes
+- Improve entity extraction for code (AST parsing)
+- Hybrid FAISS + Graph retrieval
+- Add reranking using transformer cross-encoders
 
 ## Contribution
 
